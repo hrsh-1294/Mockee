@@ -68,38 +68,47 @@ const Agent = ({ userName, userId, type, questions }: AgentProps) => {
 
     }, [messages, callStatus, type, userId]);
 
+    // const handleCall = async () =>{
+    //     setCallStatus(CallStatus.CONNECTING);
+    //      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,{
+    //         variableValues: {
+    //             username: userName,
+    //             userid: userId,
+    //         }
+    //      })
+    // }
+
     const handleCall = async () => {
         setCallStatus(CallStatus.CONNECTING);
 
         if (type === "generate") {
             await vapi.start(
-                process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, // using assistantId from dashboard
+                undefined,
+                undefined,
+                undefined,
+                process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,
                 {
                     variableValues: {
                         username: userName,
-                        userId: userId ?? "", // ensure it's not undefined
-                    }
+                        userid: userId,
+                    },
                 }
             );
         } else {
             let formattedQuestions = "";
             if (questions) {
                 formattedQuestions = questions
-                    .map((q: string) => `- ${q}`)
+                    .map((question) => `- ${question}`)
                     .join("\n");
             }
 
-            await vapi.start(
-                interviewer, // your inline assistant object from CreateAssistantDTO
-                {
-                    variableValues: {
-                        questions: formattedQuestions
-                    }
-                }
-            );
+            await vapi.start(interviewer, {
+                variableValues: {
+                    questions: formattedQuestions,
+                },
+            });
         }
     };
-
 
     const handleDisconnect = async () => {
         setCallStatus(CallStatus.FINISHED);
@@ -156,7 +165,7 @@ const Agent = ({ userName, userId, type, questions }: AgentProps) => {
                             )}
                         />
                         <span>
-                            {isCallInactiveorFinished ? 'Call' : '....'}
+                            {isCallInactiveorFinished ? 'Call' : 'Connecting..'}
                         </span>
                     </button>
                 ) : (
@@ -167,6 +176,6 @@ const Agent = ({ userName, userId, type, questions }: AgentProps) => {
         </>
 
     )
-}
+};
 
 export default Agent
