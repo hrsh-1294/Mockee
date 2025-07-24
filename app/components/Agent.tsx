@@ -20,7 +20,7 @@ interface SavedMessage {
     content: string;
 }
 
-const Agent = ({ userName, userId, type, questions }: AgentProps) => {
+const Agent = ({ userName, userId, type, questions, interviewId }: AgentProps) => {
 
     const router = useRouter();
 
@@ -63,7 +63,34 @@ const Agent = ({ userName, userId, type, questions }: AgentProps) => {
         // Assuming you have a function to subscribe to these events    
     }, [])
 
+    const handleGenerateFeedback = async (messages: SavedMessage[]) => {
+        console.log('Generating feedback here');
+
+        const { success, id } = {
+            success:true,
+            id: 'feedback-id'
+        }
+
+        if(success && id){
+            router.push(`/interview/${interviewId}/feedback`);
+        
+        }
+        else{
+            console.error('Error saving feedback');
+            router.push('/');
+        }
+
+    }
+
     useEffect(() => {
+        if(callStatus === CallStatus.FINISHED){
+            if(type === "generate") {
+                router.push('/');
+            }
+            else{
+                handleGenerateFeedback(messages);
+            }
+        }
         if (callStatus === CallStatus.FINISHED) router.push('/');
 
     }, [messages, callStatus, type, userId]);
