@@ -163,7 +163,7 @@ const Agent = ({ userName, userId, type, questions, interviewId }: AgentProps) =
 
                 <div className='card-border'>
                     <div className='card-content'>
-                        <Image src="/profile.svg" alt="user avatar" width={540} height={540} className='rounded-full object-cover size-[120px]' />
+                        <Image src="/profile2.svg" alt="user avatar" width={540} height={540} className='rounded-full object-cover size-[120px]' />
                         <h3>{userName}</h3>
 
                     </div>
